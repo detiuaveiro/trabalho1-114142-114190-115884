@@ -10,11 +10,11 @@
 /// 2013, 2023
 
 // Student authors (fill in below):
-// NMec:  Name:
+// NMec:114190  Name:Rúben Costa
+// NMec:115884  Name:Lázaro Sá
 // 
 // 
-// 
-// Date:
+// Date: 14/11/2023
 //
 
 #include "image8bit.h"
@@ -171,7 +171,36 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (width >= 0);
   assert (height >= 0);
   assert (0 < maxval && maxval <= PixMax);
-  // Insert your code here!
+  
+  // Allocate memory for the image structure
+  Image img = (Image)malloc(sizeof(struct image));
+
+  if (img == NULL) {
+    printf("Memory allocation failed");
+    return NULL;
+  }
+
+  // Set the image properties
+  img->width = width;
+  img->height = height;
+  img->maxval = maxval;
+
+  // Allocate memory for the pixel array
+  img->pixel = (uint8*)malloc(width * height * sizeof(uint8));
+
+  if (img->pixel == NULL) {
+    // Memory allocation failed, clean up and return NULL
+    free(img);
+    printf("Memory allocation for pixel array failed");
+    return NULL;
+  }
+
+  // Initialize the pixel array to black
+  for (int i = 0; i < width * height; i++) {
+    img->pixel[i] = 0;
+  }
+
+  return img;
 }
 
 /// Destroy the image pointed to by (*imgp).
@@ -181,7 +210,15 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 /// Should never fail, and should preserve global errno/errCause.
 void ImageDestroy(Image* imgp) { ///
   assert (imgp != NULL);
-  // Insert your code here!
+  
+  if (*imgp != NULL) {
+    // Free the pixel array
+    free((*imgp) -> pixel);
+    // Free the image structure
+    free(*imgp);
+
+    *imgp = NULL;
+  }
 }
 
 
