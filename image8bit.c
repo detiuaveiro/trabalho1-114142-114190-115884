@@ -330,7 +330,25 @@ int ImageMaxval(Image img) { ///
 /// *max is set to the maximum.
 void ImageStats(Image img, uint8* min, uint8* max) { ///
   assert (img != NULL);
-  // Insert your code here!
+  //minimum gray -> black (0)
+  //maximum gray -> white (255)
+  
+  //atribuir o maior valor ao min para cada vez que quando encontrar um valor menor substituir
+  *min = PixMax;
+  //atribuir o menor valor ao max para cada vez que quando encontrar um valor maior substituir
+  *max = 0;
+
+  for(int i = 0; i < img->width * img->height; i++) {
+    //buscar o valor de gray levels do array de pixeis da imagem
+    uint8 pixelValue = img->pixel[i];
+
+    if(pixelValue < *min) {
+      *min = pixelValue;
+    }
+    if(pixelValue > *max) {
+      *max = pixelValue;
+    }
+  }
 }
 
 /// Check if pixel position (x,y) is inside img.
@@ -357,7 +375,10 @@ int ImageValidRect(Image img, int x, int y, int w, int h) { ///
 // The returned index must satisfy (0 <= index < img->width*img->height)
 static inline int G(Image img, int x, int y) {
   int index;
-  // Insert your code here!
+  //fórmula: 
+  //'y * img->width' calcula a posição vertical
+  //'+ x' ajusta essa posição horizontalmente para a coluna
+  index = y * img->width + x;
   assert (0 <= index && index < img->width*img->height);
   return index;
 }
