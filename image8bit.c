@@ -692,12 +692,22 @@ Image ImageCrop(Image img, int x, int y, int w, int h)
 /// Paste img2 into position (x, y) of img1.
 /// This modifies img1 in-place: no allocation involved.
 /// Requires: img2 must fit inside img1 at position (x, y).
+
+// novamente pls testa isto direito isto não me mostra erros nenhuns mas eu não confio
 void ImagePaste(Image img1, int x, int y, Image img2)
 { ///
   assert(img1 != NULL);
   assert(img2 != NULL);
+  // make sure img 2 fits in img 1
   assert(ImageValidRect(img1, x, y, img2->width, img2->height));
-  // Insert your code here!
+
+  for (int i = 0; i < img2->height; i++)
+  {
+    for (int j = 0; j < img2->width; j++)
+    {
+      ImageSetPixel(img1, y + i, x + j, ImageGetPixel(img2, i, j));
+    }
+  }
 }
 
 /// Blend an image into a larger image.
