@@ -176,7 +176,7 @@ Image ImageCreate(int width, int height, uint8 maxval)
 
   if (img == NULL)
   {
-    printf("Memory allocation failed");
+    errCause = "Memory allocation failed";
     return NULL;
   }
 
@@ -192,7 +192,7 @@ Image ImageCreate(int width, int height, uint8 maxval)
   {
     // Memory allocation failed, clean up and return NULL
     free(img);
-    printf("Memory allocation for pixel array failed");
+    errCause = "Memory allocation for pixel array failed";
     return NULL;
   }
 
@@ -550,9 +550,45 @@ void ImageBrighten(Image img, double factor)
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageRotate(Image img)
-{ ///
+{ ///rotação de 90º, a coordenada x mantem-se, o que muda é a y
+//1 2 3           7 4 1
+//4 5 6    =>     8 5 2
+//7 8 9           9 6 3
+
   assert(img != NULL);
-  // Insert your code here!
+  
+  // Crie uma nova imagem
+  Image rotatedImg = ImageCreate(img->height, img->width, img->maxval);
+
+  // Verifique se a criação da nova imagem foi bem-sucedida
+  if (rotatedImg == NULL)
+  {
+    errCause = "Memory allocation failed";
+    return NULL;
+  }
+
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      //calcular as coordenadas após a rotação
+      //examples: (2,1)->(3,2) ; (1,2)->(2,1)
+      //img->height - 1 => height total (começa em 0)
+      int heightT = img->height - 1;
+      
+      int RotatedX =  heightT - y;
+      //coordenada X = rotação Y; ('2',1)->(3,'2') ; ('1',2)->(2,'1')
+      int RotatedY = x;
+
+      // Obtenha o valor do pixel da imagem original
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      // Defina o pixel na imagem rotacionada
+      ImageSetPixel(rotatedImg, RotatedX, RotatedY, pixelValue);
+    }
+  }
+
+  return rotatedImg;
 }
 
 /// Mirror an image = flip left-right.
@@ -563,9 +599,44 @@ Image ImageRotate(Image img)
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageMirror(Image img)
-{ ///
+{ ///no flip left-right, o y mantém-se
+//1 2 3           3 2 1
+//4 5 6    =>     6 5 4
+//7 8 9           9 8 7
   assert(img != NULL);
-  // Insert your code here!
+  
+  // Crie uma nova imagem
+  Image mirrorImg = ImageCreate(img->height, img->width, img->maxval);
+
+  // Verifique se a criação da nova imagem foi bem-sucedida
+  if (mirrorImg == NULL)
+  {
+    errCause = "Memory allocation failed";
+    return NULL;
+  }
+
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      //calcular as coordenadas após o flip left-right
+      //examples: (1,1)->(3,1) ; (1,2)->(3,2)
+      //img->width - 1 => width total (começa em 0)
+      int widthT = img->width - 1;
+      
+      int mirrorX =  widthT - x;
+      //coordenada Y = mirror Y; (1,'1')->(3,'1') ; (1,'2')->(3,'2')
+      int mirrorY = x;
+
+      // Obtenha o valor do pixel da imagem original
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      // Defina o pixel na imagem rotacionada
+      ImageSetPixel(mirrorImg, mirrorX, mirrorY, pixelValue);
+    }
+  }
+
+  return mirrorImg;
 }
 
 /// Crop a rectangular subimage from img.
