@@ -387,7 +387,7 @@ int ImageValidRect(Image img, int x, int y, int w, int h)
   int maxW = x + w;
   int maxH = y + h;
 
-  if (maxW < img->width && maxH < img->height)
+  if (maxW <= img->width && maxH <= img->height)
   {
     return 1; // Return true if the entire area is inside the image
   }
@@ -449,7 +449,25 @@ void ImageSetPixel(Image img, int x, int y, uint8 level)
 void ImageNegative(Image img)
 { ///
   assert(img != NULL);
-  // Insert your code here!
+  
+  // Obtém o valor máximo do pixel (branco)
+  uint8 maxPixelValue = ImageMaxval(img);
+
+  // Percorre todos os pixels da imagem
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      // Obtém o valor do pixel atual
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      // Calcula o valor negativo (inverte o valor do pixel)
+      uint8 negativeValue = maxPixelValue - pixelValue;
+
+      // Define o novo valor do pixel
+      ImageSetPixel(img, x, y, negativeValue);
+    }
+  }
 }
 
 /// Apply threshold to image.
@@ -458,7 +476,25 @@ void ImageNegative(Image img)
 void ImageThreshold(Image img, uint8 thr)
 { ///
   assert(img != NULL);
-  // Insert your code here!
+  
+  // Percorre todos os pixels da imagem
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      // Obtém o valor do pixel atual
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      //verifica se o pixel é inferior a thr
+      if(pixelValue < thr) {
+        //transforma de branco para preto
+        ImageSetPixel(img, x, y, 0);
+      } else {
+        //inverso (preto para branco)
+        ImageSetPixel(img, x, y, 255);
+      }
+    }
+  }
 }
 
 /// Brighten image by a factor.
@@ -468,8 +504,28 @@ void ImageThreshold(Image img, uint8 thr)
 void ImageBrighten(Image img, double factor)
 { ///
   assert(img != NULL);
-  // ? assert (factor >= 0.0);
-  // Insert your code here!
+  assert (factor >= 0.0);
+
+  // Percorre todos os pixels da imagem
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      // Obtém o valor do pixel atual
+      uint8 pixelValue = ImageGetPixel(img, x, y);
+
+      // Calcula o novo valor do pixel multiplicando pelo fator
+      uint8 NewpixelValue = pixelValue * factor;
+      //verifica se vai ultrpassar o maxVal (se for adquire o valor de maxVal)
+      if (NewpixelValue > 255) {
+          //satura para o maior valor possivel (maxVal = 255)
+          NewpixelValue = 255;
+        }
+      
+      //define o novo valor do pixel
+      ImageSetPixel(img, x, y, NewpixelValue);
+    }
+  }
 }
 
 /// Geometric transformations
