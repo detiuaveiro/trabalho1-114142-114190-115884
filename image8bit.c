@@ -449,7 +449,7 @@ void ImageSetPixel(Image img, int x, int y, uint8 level)
 void ImageNegative(Image img)
 { ///
   assert(img != NULL);
-  
+
   // Obtém o valor máximo do pixel (branco)
   uint8 maxPixelValue = ImageMaxval(img);
 
@@ -476,7 +476,7 @@ void ImageNegative(Image img)
 void ImageThreshold(Image img, uint8 thr)
 { ///
   assert(img != NULL);
-  
+
   // Percorre todos os pixels da imagem
   for (int y = 0; y < ImageHeight(img); y++)
   {
@@ -485,12 +485,15 @@ void ImageThreshold(Image img, uint8 thr)
       // Obtém o valor do pixel atual
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
-      //verifica se o pixel é inferior a thr
-      if(pixelValue < thr) {
-        //transforma de branco para preto
+      // verifica se o pixel é inferior a thr
+      if (pixelValue < thr)
+      {
+        // transforma de branco para preto
         ImageSetPixel(img, x, y, 0);
-      } else {
-        //inverso (preto para branco)
+      }
+      else
+      {
+        // inverso (preto para branco)
         ImageSetPixel(img, x, y, 255);
       }
     }
@@ -504,7 +507,7 @@ void ImageThreshold(Image img, uint8 thr)
 void ImageBrighten(Image img, double factor)
 { ///
   assert(img != NULL);
-  assert (factor >= 0.0);
+  assert(factor >= 0.0);
 
   // Percorre todos os pixels da imagem
   for (int y = 0; y < ImageHeight(img); y++)
@@ -516,13 +519,14 @@ void ImageBrighten(Image img, double factor)
 
       // Calcula o novo valor do pixel multiplicando pelo fator
       uint8 NewpixelValue = pixelValue * factor;
-      //verifica se vai ultrpassar o maxVal (se for adquire o valor de maxVal)
-      if (NewpixelValue > 255) {
-          //satura para o maior valor possivel (maxVal = 255)
-          NewpixelValue = 255;
-        }
-      
-      //define o novo valor do pixel
+      // verifica se vai ultrpassar o maxVal (se for adquire o valor de maxVal)
+      if (NewpixelValue > 255)
+      {
+        // satura para o maior valor possivel (maxVal = 255)
+        NewpixelValue = 255;
+      }
+
+      // define o novo valor do pixel
       ImageSetPixel(img, x, y, NewpixelValue);
     }
   }
@@ -550,13 +554,13 @@ void ImageBrighten(Image img, double factor)
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageRotate(Image img)
-{ ///rotação de 90º, a coordenada x mantem-se, o que muda é a y
-//1 2 3           7 4 1
-//4 5 6    =>     8 5 2
-//7 8 9           9 6 3
+{ /// rotação de 90º, a coordenada x mantem-se, o que muda é a y
+  // 1 2 3           7 4 1
+  // 4 5 6    =>     8 5 2
+  // 7 8 9           9 6 3
 
   assert(img != NULL);
-  
+
   // Crie uma nova imagem
   Image rotatedImg = ImageCreate(img->height, img->width, img->maxval);
 
@@ -571,13 +575,13 @@ Image ImageRotate(Image img)
   {
     for (int x = 0; x < ImageWidth(img); x++)
     {
-      //calcular as coordenadas após a rotação
-      //examples: (2,1)->(3,2) ; (1,2)->(2,1)
-      //img->height - 1 => height total (começa em 0)
+      // calcular as coordenadas após a rotação
+      // examples: (2,1)->(3,2) ; (1,2)->(2,1)
+      // img->height - 1 => height total (começa em 0)
       int heightT = img->height - 1;
-      
-      int RotatedX =  heightT - y;
-      //coordenada X = rotação Y; ('2',1)->(3,'2') ; ('1',2)->(2,'1')
+
+      int RotatedX = heightT - y;
+      // coordenada X = rotação Y; ('2',1)->(3,'2') ; ('1',2)->(2,'1')
       int RotatedY = x;
 
       // Obtenha o valor do pixel da imagem original
@@ -599,12 +603,12 @@ Image ImageRotate(Image img)
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageMirror(Image img)
-{ ///no flip left-right, o y mantém-se
-//1 2 3           3 2 1
-//4 5 6    =>     6 5 4
-//7 8 9           9 8 7
+{ /// no flip left-right, o y mantém-se
+  // 1 2 3           3 2 1
+  // 4 5 6    =>     6 5 4
+  // 7 8 9           9 8 7
   assert(img != NULL);
-  
+
   // Crie uma nova imagem
   Image mirrorImg = ImageCreate(img->height, img->width, img->maxval);
 
@@ -619,13 +623,13 @@ Image ImageMirror(Image img)
   {
     for (int x = 0; x < ImageWidth(img); x++)
     {
-      //calcular as coordenadas após o flip left-right
-      //examples: (1,1)->(3,1) ; (1,2)->(3,2)
-      //img->width - 1 => width total (começa em 0)
+      // calcular as coordenadas após o flip left-right
+      // examples: (1,1)->(3,1) ; (1,2)->(3,2)
+      // img->width - 1 => width total (começa em 0)
       int widthT = img->width - 1;
-      
-      int mirrorX =  widthT - x;
-      //coordenada Y = mirror Y; (1,'1')->(3,'1') ; (1,'2')->(3,'2')
+
+      int mirrorX = widthT - x;
+      // coordenada Y = mirror Y; (1,'1')->(3,'1') ; (1,'2')->(3,'2')
       int mirrorY = x;
 
       // Obtenha o valor do pixel da imagem original
@@ -651,11 +655,35 @@ Image ImageMirror(Image img)
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
+
+// depois testa isto que eu não tenho a certeza se está certo
 Image ImageCrop(Image img, int x, int y, int w, int h)
 { ///
   assert(img != NULL);
-  assert(ImageValidRect(img, x, y, w, h));
-  // Insert your code here!
+  if (!ImageValidRect(img, x, y, w, h))
+  {
+    errCause = "Invalid img"; // não faço a minima se é suposto ser isto
+    return NULL;
+  }
+
+  // Create a new image for the cropped area
+  Image croppedImg = ImageCreate(w, h, img->maxval);
+  if (croppedImg == NULL)
+  {
+    errCause = "Memory allocation failed";
+    return NULL;
+  }
+
+  // Copy the pixels from the original image to the cropped image
+  for (int i = 0; i < h; i++)
+  {
+    for (int j = 0; j < w; j++)
+    {
+      ImageSetPixel(croppedImg, i, j, ImageGetPixel(img, y + i, x + j));
+    }
+  }
+
+  return croppedImg;
 }
 
 /// Operations on two images
