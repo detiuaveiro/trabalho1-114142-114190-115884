@@ -561,10 +561,10 @@ Image ImageRotate(Image img)
 
   assert(img != NULL);
 
-  // Crie uma nova imagem
+  // Cria uma nova imagem
   Image rotatedImg = ImageCreate(img->height, img->width, img->maxval);
 
-  // Verifique se a criação da nova imagem foi bem-sucedida
+  // Verifica se a criação da nova imagem foi bem-sucedida
   if (rotatedImg == NULL)
   {
     errCause = "Memory allocation failed";
@@ -584,10 +584,10 @@ Image ImageRotate(Image img)
       // coordenada X = rotação Y; ('2',1)->(3,'2') ; ('1',2)->(2,'1')
       int RotatedY = x;
 
-      // Obtenha o valor do pixel da imagem original
+      // Obtem o valor do pixel da imagem original
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
-      // Defina o pixel na imagem rotacionada
+      // Define o pixel na imagem rotacionada
       ImageSetPixel(rotatedImg, RotatedX, RotatedY, pixelValue);
     }
   }
@@ -609,10 +609,10 @@ Image ImageMirror(Image img)
   // 7 8 9           9 8 7
   assert(img != NULL);
 
-  // Crie uma nova imagem
+  // Cria uma nova imagem
   Image mirrorImg = ImageCreate(img->height, img->width, img->maxval);
 
-  // Verifique se a criação da nova imagem foi bem-sucedida
+  // Verifica se a criação da nova imagem foi bem-sucedida
   if (mirrorImg == NULL)
   {
     errCause = "Memory allocation failed";
@@ -632,10 +632,10 @@ Image ImageMirror(Image img)
       // coordenada Y = mirror Y; (1,'1')->(3,'1') ; (1,'2')->(3,'2')
       int mirrorY = x;
 
-      // Obtenha o valor do pixel da imagem original
+      // Obtem o valor do pixel da imagem original
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
-      // Defina o pixel na imagem rotacionada
+      // Define o pixel na imagem rotacionada
       ImageSetPixel(mirrorImg, mirrorX, mirrorY, pixelValue);
     }
   }
@@ -656,13 +656,13 @@ Image ImageMirror(Image img)
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
 
-// depois testa isto que eu não tenho a certeza se está certo
 Image ImageCrop(Image img, int x, int y, int w, int h)
 { ///
   assert(img != NULL);
+  //verifica se a imagem vai ter um formato de um retângulo (validação)
   if (!ImageValidRect(img, x, y, w, h))
   {
-    errCause = "Invalid img"; // não faço a minima se é suposto ser isto
+    errCause = "Invalid img"; 
     return NULL;
   }
 
@@ -679,6 +679,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h)
   {
     for (int j = 0; j < w; j++)
     {
+      //buscar o pixel e substituir na posição certa
       ImageSetPixel(croppedImg, i, j, ImageGetPixel(img, y + i, x + j));
     }
   }
@@ -693,7 +694,6 @@ Image ImageCrop(Image img, int x, int y, int w, int h)
 /// This modifies img1 in-place: no allocation involved.
 /// Requires: img2 must fit inside img1 at position (x, y).
 
-// novamente pls testa isto direito isto não me mostra erros nenhuns mas eu não confio
 void ImagePaste(Image img1, int x, int y, Image img2)
 { ///
   assert(img1 != NULL);
@@ -705,7 +705,7 @@ void ImagePaste(Image img1, int x, int y, Image img2)
   {
     for (int j = 0; j < img2->width; j++)
     {
-      ImageSetPixel(img1, y + i, x + j, ImageGetPixel(img2, i, j));
+      ImageSetPixel(img1, x + j, y + i, ImageGetPixel(img2, j, i));
     }
   }
 }
