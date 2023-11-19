@@ -575,13 +575,13 @@ Image ImageRotate(Image img)
     for (int x = 0; x < ImageWidth(img); x++)
     {
       // calcular as coordenadas após a rotação
-      // examples: (2,1)->(3,2) ; (1,2)->(2,1)
+      // examples: (2,1)->(3,2) ; (1,2)->(2,1) nota que o x é igual ao rotatedY
 
       // Get the pixel value from the original image
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
       // Calculate the new coordinates after rotation
-      int newX = y;           // Transpose x and y
+      int newX = y;           
       int newY = img->width - 1 - x;
 
       // Set the pixel value in the rotated image
@@ -621,19 +621,15 @@ Image ImageMirror(Image img)
     for (int x = 0; x < ImageWidth(img); x++)
     {
       // calcular as coordenadas após o flip left-right
-      // examples: (1,1)->(3,1) ; (1,2)->(3,2)
-      // img->width - 1 => width total (começa em 0)
-      int widthT = img->width - 1;
-
-      int mirrorX = widthT - x;
-      // coordenada Y = mirror Y; (1,'1')->(3,'1') ; (1,'2')->(3,'2')
-      int mirrorY = x;
-
-      // Obtem o valor do pixel da imagem original
+      // examples: (1,1)->(3,1) ; (1,2)->(3,2) nota que o y mantém-se
+      // Get the pixel value from the original image
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
-      // Define o pixel na imagem rotacionada
-      ImageSetPixel(mirrorImg, mirrorX, mirrorY, pixelValue);
+      // Calculate the new x-coordinate after mirroring
+      int newX = img->width - 1 - x;
+
+      // Set the pixel value in the mirrored image
+      ImageSetPixel(mirrorImg, newX, y, pixelValue);
     }
   }
 
