@@ -518,16 +518,21 @@ void ImageBrighten(Image img, double factor)
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
       // Calcula o novo valor do pixel multiplicando pelo fator
-      uint8 NewpixelValue = pixelValue * factor;
+      int NewpixelValue = (int)(pixelValue * factor);
       // verifica se vai ultrpassar o maxVal (se for adquire o valor de maxVal)
       if (NewpixelValue > 255)
       {
         // satura para o maior valor possivel (maxVal = 255)
         NewpixelValue = 255;
       }
+      if (NewpixelValue < 0)
+      {
+        // satura para o maior valor possivel (maxVal = 255)
+        NewpixelValue = 0;
+      }
 
       // define o novo valor do pixel
-      ImageSetPixel(img, x, y, NewpixelValue);
+      ImageSetPixel(img, x, y, (uint8)round(NewpixelValue));
     }
   }
 }
@@ -722,18 +727,18 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha)
   assert(img2 != NULL);
   assert(ImageValidRect(img1, x, y, img2->width, img2->height));
   
-  for (int i = 0; i < ImageHeight(img2); i++) 
+  for (int i = 0; i < img2->height; i++) 
   {
-    for (int j = 0; j < ImageWidth(img2); j++) 
+    for (int j = 0; j < img2->width; j++) 
     {
       // Obtenha os valores dos pixels das duas imagens
       //encontrar as posições dos pixeis da img 1 onde vai ficar os pixeis da img 2 e obte-los
-      uint8 pixelImg1 = ImageGetPixel(img1, y + i, x + j);
-      uint8 pixelImg2 = ImageGetPixel(img2, i, j);
+      uint8 pixelImg1 = ImageGetPixel(img1, x + j, y + i);
+      uint8 pixelImg2 = ImageGetPixel(img2, j, i);
 
       //defenir o valor do novo pixel (using a formula)
       //formula: blendedValue = α    * pixelImg2 + (1.0 − α    ) * pixelImg1
-      int blendedValue = (int)(alpha * pixelImg2 + (1.0 - alpha) * pixelImg1);
+      int blendedValue = (int)(alpha * pixelImg2 + (1.0 - alpha) * pixelImg1 + 0.5);
 
       //caso o blendedValue não esteja nos limites dos valores posiveis de um pixel (0 a 255)
       //ajustar a saturação
@@ -746,7 +751,7 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha)
       }
 
       //defenir o pixel
-      ImageSetPixel(img1, y + i, x + j, (uint8)blendedValue);
+      ImageSetPixel(img1, x + j, y + i, (uint8)blendedValue);
     }
   }
 }
