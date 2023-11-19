@@ -196,12 +196,6 @@ Image ImageCreate(int width, int height, uint8 maxval)
     return NULL;
   }
 
-  // Initialize the pixel array to black
-  for (int i = 0; i < width * height; i++)
-  {
-    img->pixel[i] = 0;
-  }
-
   return img;
 }
 
@@ -582,18 +576,16 @@ Image ImageRotate(Image img)
     {
       // calcular as coordenadas após a rotação
       // examples: (2,1)->(3,2) ; (1,2)->(2,1)
-      // img->height - 1 => height total (começa em 0)
-      int heightT = img->height - 1;
 
-      int RotatedX = heightT - y;
-      // coordenada X = rotação Y; ('2',1)->(3,'2') ; ('1',2)->(2,'1')
-      int RotatedY = x;
-
-      // Obtem o valor do pixel da imagem original
+      // Get the pixel value from the original image
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
-      // Define o pixel na imagem rotacionada
-      ImageSetPixel(rotatedImg, RotatedX, RotatedY, pixelValue);
+      // Calculate the new coordinates after rotation
+      int newX = y;           // Transpose x and y
+      int newY = img->width - 1 - x;
+
+      // Set the pixel value in the rotated image
+      ImageSetPixel(rotatedImg, newX, newY, pixelValue);
     }
   }
 
