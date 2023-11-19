@@ -721,7 +721,34 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha)
   assert(img1 != NULL);
   assert(img2 != NULL);
   assert(ImageValidRect(img1, x, y, img2->width, img2->height));
-  // Insert your code here!
+  
+  for (int i = 0; i < ImageHeight(img2); i++) 
+  {
+    for (int j = 0; j < ImageWidth(img2); j++) 
+    {
+      // Obtenha os valores dos pixels das duas imagens
+      //encontrar as posições dos pixeis da img 1 onde vai ficar os pixeis da img 2 e obte-los
+      uint8 pixelImg1 = ImageGetPixel(img1, y + i, x + j);
+      uint8 pixelImg2 = ImageGetPixel(img2, i, j);
+
+      //defenir o valor do novo pixel (using a formula)
+      //formula: blendedValue = α    * pixelImg2 + (1.0 − α    ) * pixelImg1
+      int blendedValue = (int)(alpha * pixelImg2 + (1.0 - alpha) * pixelImg1);
+
+      //caso o blendedValue não esteja nos limites dos valores posiveis de um pixel (0 a 255)
+      //ajustar a saturação
+      if (blendedValue > 255) {                     // ou blendedValue = (blendedValue > 255) ? 255 : blendedValue;
+        blendedValue = 255;
+      }
+
+      if (blendedValue < 0) {                      // ou blendedValue = (blendedValue < 0) ? 0 : blendedValue;
+        blendedValue = 0;
+      }
+
+      //defenir o pixel
+      ImageSetPixel(img1, y + i, x + j, (uint8)blendedValue);
+    }
+  }
 }
 
 /// Compare an image to a subimage of a larger image.
