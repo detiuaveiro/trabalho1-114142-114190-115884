@@ -532,7 +532,7 @@ void ImageBrighten(Image img, double factor)
       }
 
       // define o novo valor do pixel
-      ImageSetPixel(img, x, y, (uint8)round(NewpixelValue));
+      ImageSetPixel(img, x, y, (uint8)NewpixelValue);
     }
   }
 }
