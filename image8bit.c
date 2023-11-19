@@ -581,7 +581,7 @@ Image ImageRotate(Image img)
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
       // Calculate the new coordinates after rotation
-      int newX = y;           
+      int newX = y;
       int newY = img->width - 1 - x;
 
       // Set the pixel value in the rotated image
@@ -652,10 +652,10 @@ Image ImageMirror(Image img)
 Image ImageCrop(Image img, int x, int y, int w, int h)
 { ///
   assert(img != NULL);
-  //verifica se a imagem vai ter um formato de um retângulo (validação)
+  // verifica se a imagem vai ter um formato de um retângulo (validação)
   if (!ImageValidRect(img, x, y, w, h))
   {
-    errCause = "Invalid img"; 
+    errCause = "Invalid img";
     return NULL;
   }
 
@@ -672,7 +672,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h)
   {
     for (int j = 0; j < w; j++)
     {
-      //buscar o pixel e substituir na posição certa
+      // buscar o pixel e substituir na posição certa
       ImageSetPixel(croppedImg, i, j, ImageGetPixel(img, y + i, x + j));
     }
   }
@@ -714,31 +714,33 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha)
   assert(img1 != NULL);
   assert(img2 != NULL);
   assert(ImageValidRect(img1, x, y, img2->width, img2->height));
-  
-  for (int i = 0; i < img2->height; i++) 
+
+  for (int i = 0; i < img2->height; i++)
   {
-    for (int j = 0; j < img2->width; j++) 
+    for (int j = 0; j < img2->width; j++)
     {
       // Obtenha os valores dos pixels das duas imagens
-      //encontrar as posições dos pixeis da img 1 onde vai ficar os pixeis da img 2 e obte-los
+      // encontrar as posições dos pixeis da img 1 onde vai ficar os pixeis da img 2 e obte-los
       uint8 pixelImg1 = ImageGetPixel(img1, x + j, y + i);
       uint8 pixelImg2 = ImageGetPixel(img2, j, i);
 
-      //defenir o valor do novo pixel (using a formula)
-      //formula: blendedValue = α    * pixelImg2 + (1.0 − α    ) * pixelImg1
+      // defenir o valor do novo pixel (using a formula)
+      // formula: blendedValue = α    * pixelImg2 + (1.0 − α    ) * pixelImg1
       int blendedValue = (int)(alpha * pixelImg2 + (1.0 - alpha) * pixelImg1 + 0.5);
 
-      //caso o blendedValue não esteja nos limites dos valores posiveis de um pixel (0 a 255)
-      //ajustar a saturação
-      if (blendedValue > 255) {                     // ou blendedValue = (blendedValue > 255) ? 255 : blendedValue;
+      // caso o blendedValue não esteja nos limites dos valores posiveis de um pixel (0 a 255)
+      // ajustar a saturação
+      if (blendedValue > 255)
+      { // ou blendedValue = (blendedValue > 255) ? 255 : blendedValue;
         blendedValue = 255;
       }
 
-      if (blendedValue < 0) {                      // ou blendedValue = (blendedValue < 0) ? 0 : blendedValue;
+      if (blendedValue < 0)
+      { // ou blendedValue = (blendedValue < 0) ? 0 : blendedValue;
         blendedValue = 0;
       }
 
-      //defenir o pixel
+      // defenir o pixel
       ImageSetPixel(img1, x + j, y + i, (uint8)blendedValue);
     }
   }
@@ -752,7 +754,22 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2)
   assert(img1 != NULL);
   assert(img2 != NULL);
   assert(ImageValidPos(img1, x, y));
-  // Insert your code here!
+
+  Image sub = ImageCrop(img1, x, y, img2->width, img2->height);
+  for (int i = 0; i < sub->height; i++)
+  {
+    for (int j = 0; j < sub->width; j++)
+    {
+      if (ImageGetPixel(img1, j, i) == ImageGetPixel(img2, j, i))
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+  }
 }
 
 /// Locate a subimage inside another image.
