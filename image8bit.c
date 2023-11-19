@@ -518,7 +518,7 @@ void ImageBrighten(Image img, double factor)
       uint8 pixelValue = ImageGetPixel(img, x, y);
 
       // Calcula o novo valor do pixel multiplicando pelo fator
-      int NewpixelValue = (int)(pixelValue * factor);
+      int NewpixelValue = (int)(pixelValue * factor + 0.5);
       // verifica se vai ultrpassar o maxVal (se for adquire o valor de maxVal)
       if (NewpixelValue > 255)
       {
