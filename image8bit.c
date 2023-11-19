@@ -760,16 +760,13 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2)
   {
     for (int j = 0; j < sub->width; j++)
     {
-      if (ImageGetPixel(img1, j, i) == ImageGetPixel(img2, j, i))
-      {
-        return 1;
-      }
-      else
+      if (!(ImageGetPixel(img1, j, i) == ImageGetPixel(img2, j, i)))
       {
         return 0;
       }
     }
   }
+  return 1;
 }
 
 /// Locate a subimage inside another image.
@@ -780,7 +777,20 @@ int ImageLocateSubImage(Image img1, int *px, int *py, Image img2)
 { ///
   assert(img1 != NULL);
   assert(img2 != NULL);
-  // Insert your code here!
+
+  for (int i = 0; i < img1->height; i++)
+  {
+    for (int j = 0; j < img1->width; j++)
+    {
+      if (ImageMatchSubImage(img1, i, j, img2))
+      {
+        *px = i;
+        *py = j;
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
 
 /// Filtering
