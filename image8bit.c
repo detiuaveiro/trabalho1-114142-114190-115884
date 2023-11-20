@@ -762,6 +762,7 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2)
     {
       if (!(ImageGetPixel(img1, j, i) == ImageGetPixel(img2, j, i)))
       {
+        // Os pixels não são idênticos => não há correspondência
         return 0;
       }
     }
@@ -782,10 +783,11 @@ int ImageLocateSubImage(Image img1, int *px, int *py, Image img2)
   {
     for (int j = 0; j < img1->width; j++)
     {
-      if (ImageMatchSubImage(img1, i, j, img2))
+      if (ImageMatchSubImage(img1, j, i, img2))
       {
-        *px = i;
-        *py = j;
+        // Correspondência encontrada, atualiza as posições e retorna 1
+        *px = j;
+        *py = i;
         return 1;
       }
     }
