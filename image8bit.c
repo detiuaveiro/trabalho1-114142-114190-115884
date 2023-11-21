@@ -803,5 +803,51 @@ int ImageLocateSubImage(Image img1, int *px, int *py, Image img2)
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy)
 { ///
-  // Insert your code here!
+  assert(img != NULL);
+  assert(dx >= 0 && dy >= 0);
+
+  Image tempImg = ImageCreate(img->width, img->height, img->maxval);
+
+  // Verificar se a criação da imagem temporária foi bem-sucedida
+  if (tempImg == NULL)
+  {
+    errCause = "Memory allocation failed";
+    return;
+  }
+
+  for (int y = 0; y < ImageHeight(img); y++)
+  {
+    for (int x = 0; x < ImageWidth(img); x++)
+    {
+      int sum = 0;
+      int count = 0;
+
+      // Percorre a vizinhança definida por dx e dy
+      //começa em negativo para que percorra para cima e para a esquerda
+      for (int i = -dy; i <= dy; i++)
+      {
+        for (int j = -dx; j <= dx; j++)
+        {
+          int newX = x + j;
+          int newY = y + i;
+
+          // Verifica se as coordenadas estão dentro dos limites da imagem
+          if (newX >= 0 && newX < ImageWidth(img) && newY >= 0 && newY < ImageHeight(img))
+          {
+            //acumular o valor dos pixeis da vizinhança
+            sum += ImageGetPixel(tempImg, newX, newY);
+            //numero de pixeis contados
+            count++;
+          }
+        }
+      }
+      
+      // Calcula a média e define o novo valor do pixel na imagem original
+      int average = count > 0 ? sum / count : 0;
+      ImageSetPixel(img, x, y, (uint8)average);
+    }
+  }
+
+  // Libera a imagem temporária
+  ImageDestroy(&tempImg);
 }
