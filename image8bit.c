@@ -521,7 +521,7 @@ void ImageBrighten(Image img, double factor)
       }
       if (NewpixelValue < 0)
       {
-        // satura para o maior valor possivel (maxVal = 255)
+        // satura para o menor valor possivel (0)
         NewpixelValue = 0;
       }
 
