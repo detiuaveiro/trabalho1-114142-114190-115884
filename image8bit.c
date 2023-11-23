@@ -824,18 +824,15 @@ void ImageBlur(Image img, int dx, int dy)
 
       // Percorre a vizinhança definida por dx e dy
       //começa em negativo para que percorra para cima e para a esquerda
-      for (int i = -dy; i <= dy; i++)
+      for (int newY = y - dy; newY <= y + dy; newY++)
       {
-        for (int j = -dx; j <= dx; j++)
+        for (int newX = x - dx; newX <= x + dx; newX++)
         {
-          int newX = x + j;
-          int newY = y + i;
-
           // Verifica se as coordenadas estão dentro dos limites da imagem
-          if (newX >= 0 && newX < ImageWidth(img) && newY >= 0 && newY < ImageHeight(img))
+          if (ImageValidPos(img, newX, newY))
           {
             //acumular o valor dos pixeis da vizinhança
-            sum += ImageGetPixel(tempImg, newX, newY);
+            sum += ImageGetPixel(img, newX, newY);
             //numero de pixeis contados
             count++;
           }
@@ -843,11 +840,14 @@ void ImageBlur(Image img, int dx, int dy)
       }
       
       // Calcula a média e define o novo valor do pixel na imagem original
-      int average = count > 0 ? sum / count : 0;
-      ImageSetPixel(img, x, y, (uint8)average);
+      int avgValue = count > 0 ? (sum + count/2)/ count : 0;
+      ImageSetPixel(tempImg, x, y, avgValue);
     }
   }
-
+    for (int i = 0; i < img->width * img->height; i++)
+  {
+    img->pixel[i] = ImageGetPixel(tempImg, i % img->width, i / img->width);
+  }
   // Libera a imagem temporária
   ImageDestroy(&tempImg);
 }
