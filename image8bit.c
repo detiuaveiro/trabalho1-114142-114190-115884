@@ -673,7 +673,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h)
     for (int j = 0; j < w; j++)
     {
       // buscar o pixel e substituir na posição certa
-      ImageSetPixel(croppedImg, i, j, ImageGetPixel(img, y + i, x + j));
+      ImageSetPixel(croppedImg, j, i, ImageGetPixel(img, x + j, y + i));
     }
   }
 
