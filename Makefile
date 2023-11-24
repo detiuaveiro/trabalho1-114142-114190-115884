@@ -42,7 +42,7 @@ test1_1: $(PROGS) setup
 
 test1: $(PROGS) setup
 	./imageTool test/original.pgm neg save neg.pgm
-	cmp thr.pgm test/neg.pgm
+	cmp neg.pgm test/neg.pgm
 
 test2: $(PROGS) setup
 	./imageTool test/original.pgm thr 128 save thr.pgm
