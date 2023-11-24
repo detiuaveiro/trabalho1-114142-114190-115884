@@ -749,6 +749,9 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha)
 /// Compare an image to a subimage of a larger image.
 /// Returns 1 (true) if img2 matches subimage of img1 at pos (x, y).
 /// Returns 0, otherwise.
+
+int count = 0;
+
 int ImageMatchSubImage(Image img1, int x, int y, Image img2)
 { ///
   assert(img1 != NULL);
@@ -759,6 +762,7 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2)
   {
     for (int j = 0; j < img2->width; j++)
     {
+      count += 1;
       if (ImageGetPixel(img1, x + j, y + i) != ImageGetPixel(img2, j, i))
       {
         // Os pixels não são idênticos => não há correspondência
@@ -778,19 +782,21 @@ int ImageLocateSubImage(Image img1, int *px, int *py, Image img2)
   assert(img1 != NULL);
   assert(img2 != NULL);
 
-  for (int i = 0; i <= img1->height - img2->height; i++)
+  for (int i = 0; i <= img1->height - img2->height + 1; i++)
   {
-    for (int j = 0; j <= img1->width - img2->width; j++)
+    for (int j = 0; j <= img1->width - img2->width + 1; j++)
     {
       if (ImageMatchSubImage(img1, j, i, img2))
       {
         // Correspondência encontrada, atualiza as posições e retorna 1
         *px = j;
         *py = i;
+        printf("Total de comparações feitas: %d\n", count);
         return 1;
       }
     }
   }
+  printf("Total de comparações feitas: %d\n", count);
   return 0;
 }
 
