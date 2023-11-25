@@ -53,10 +53,10 @@ test2_1: $(PROGS) setup
 
 test3_1: $(PROGS) setup
 	./imageTool pgm/medium/tac-pulmao_512x512.pgm bri .33 save bri2.pgm
-	cmp bri.pgm test/bri.pgm
 
 test3: $(PROGS) setup
 	./imageTool test/original.pgm bri .33 save bri.pgm
+	cmp bri.pgm test/bri.pgm
 
 test4: $(PROGS) setup
 	./imageTool test/original.pgm rotate save rotate.pgm
@@ -84,7 +84,25 @@ test7: $(PROGS) setup
 	cmp paste.pgm test/paste.pgm
 
 test7_1: $(PROGS) setup
-	./imageTool pgm/small/bird_256x256.pgm pgm/large/einstein_940x940.pgm paste 100,100 save paste2.pgm
+	./imageTool pgm/small/bird_256x256.pgm pgm/medium/mandrill_512x512.pgm paste 100,100 save paste2.pgm
+
+test7_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/large/einstein_940x940.pgm paste 100,100 save paste3.pgm
+
+test7_3: $(PROGS) setup
+	./imageTool pgm/small/art4_300x300.pgm pgm/large/einstein_940x940.pgm paste 100,100 save paste4.pgm
+
+test7_4: $(PROGS) setup
+	./imageTool pgm/medium/mandrill_512x512.pgm pgm/large/einstein_940x940.pgm paste 100,100 save paste5.pgm
+
+test7_5: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm pgm/large/airfield-05_1600x1200.pgm paste 100,100 save paste6.pgm
+
+test7_6: $(PROGS) setup
+	./imageTool pgm/small/art3_222x217.pgm pgm/medium/tools_2_765x460.pgm paste 100,100 save paste7.pgm
+
+test7_7: $(PROGS) setup
+	./imageTool pgm/medium/airfield-05_640x480.pgm pgm/large/airfield-05_1600x1200.pgm paste 100,100 save paste8.pgm
 
 test8: $(PROGS) setup
 	./imageTool test/small.pgm test/original.pgm blend 100,100,.33 save blend.pgm
@@ -97,11 +115,35 @@ test9: $(PROGS) setup
 	./imageTool test/original.pgm blur 7,7 save blur.pgm
 	cmp blur.pgm test/blur.pgm
 
-test10: $(PROGS) setup
-	./imageTool test/crop.pgm test/original.pgm locate save locate.pgm
-
 test9_1: $(PROGS) setup
 	./imageTool pgm/medium/mandrill_512x512.pgm blur 7,7 save blur2.pgm
+
+test_locate1: $(PROGS) setup
+	./imageTool test/crop.pgm test/original.pgm locate save locate.pgm
+
+test_locate2: $(PROGS) setup
+	./imageTool  pgm/small/bird_256x256.pgm paste2.pgm locate save locate2.pgm
+
+test_locate3: $(PROGS) setup
+	./imageTool  pgm/small/bird_256x256.pgm paste3.pgm locate save locate3.pgm
+
+test_locate4: $(PROGS) setup
+	./imageTool test/small.pgm test/paste.pgm locate save locate4.pgm
+
+test_locate5: $(PROGS) setup
+	./imageTool  pgm/small/art4_300x300.pgm paste4.pgm locate save locate5.pgm
+
+test_locate6: $(PROGS) setup
+	./imageTool  pgm/medium/mandrill_512x512.pgm paste5.pgm locate save locate6.pgm
+
+test_locate7: $(PROGS) setup
+	./imageTool  pgm/large/einstein_940x940.pgm paste6.pgm locate save locate7.pgm
+
+test_locate8: $(PROGS) setup
+	./imageTool  pgm/small/art3_222x217.pgm paste7.pgm locate save locate8.pgm
+
+test_locate9: $(PROGS) setup
+	./imageTool  pgm/medium/airfield-05_640x480.pgm paste8.pgm locate save locate9.pgm
 
 .PHONY: tests
 tests: $(TESTS)
