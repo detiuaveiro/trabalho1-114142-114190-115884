@@ -145,6 +145,22 @@ test_locate8: $(PROGS) setup
 test_locate9: $(PROGS) setup
 	./imageTool  pgm/medium/airfield-05_640x480.pgm paste8.pgm locate save locate9.pgm
 
+test_locate10: $(PROGS) setup
+	./imageTool  pgm/medium/airfield-05_640x480.pgm pgm/medium/airfield-05_640x480.pgm locate save locate10.pgm
+
+test_blur1: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm blur 7,7 save blur3.pgm
+
+test_blur2: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm blur 10,10 save blur4.pgm
+
+test_blur3: $(PROGS) setup
+	./imageTool pgm/medium/mandrill_512x512.pgm blur 10,10 save blur5.pgm
+
+test_blur5: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm blur 10,10 save blur7.pgm
+
+
 .PHONY: tests
 tests: $(TESTS)
 

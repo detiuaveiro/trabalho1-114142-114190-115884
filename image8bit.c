@@ -855,4 +855,5 @@ void ImageBlur(Image img, int dx, int dy)
   }
   // Libera a imagem temporária
   ImageDestroy(&tempImg);
+  InstrPrint();
 }
