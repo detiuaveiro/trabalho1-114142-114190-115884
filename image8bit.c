@@ -350,6 +350,7 @@ void ImageStats(Image img, uint8 *min, uint8 *max)
     // buscar o valor de gray levels do array de pixeis da imagem
     uint8 pixelValue = img->pixel[i];
 
+    //encontrar o pixel com menor e maior valor
     if (pixelValue < *min)
     {
       *min = pixelValue;
@@ -387,7 +388,7 @@ int ImageValidRect(Image img, int x, int y, int w, int h)
   }
   else
   {
-    return 0; // Return false otherwise
+    return 0; // otherwise return false
   }
 }
 
@@ -694,6 +695,8 @@ void ImagePaste(Image img1, int x, int y, Image img2)
   // make sure img 2 fits in img 1
   assert(ImageValidRect(img1, x, y, img2->width, img2->height));
 
+  //percorre a imagem toda e encontra a posição onde quer colar a imagem
+  //quando encontrada começa a substituir os pixeis da img1 pelos da img2
   for (int i = 0; i < img2->height; i++)
   {
     for (int j = 0; j < img2->width; j++)
@@ -849,10 +852,7 @@ void ImageBlur(Image img, int dx, int dy)
       ImageSetPixel(tempImg, x, y, avgValue);
     }
   }
-    for (int i = 0; i < img->width * img->height; i++)
-  {
-    img->pixel[i] = ImageGetPixel(tempImg, i % img->width, i / img->width);
-  }
+  ImagePaste(img, 0, 0, tempImg);
   // Libera a imagem temporária
   ImageDestroy(&tempImg);
   InstrPrint();
